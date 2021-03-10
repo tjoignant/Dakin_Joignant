@@ -1,3 +1,6 @@
 # Environement
 /venv
 .idea
+
+# PyCharm
+_pycache_
