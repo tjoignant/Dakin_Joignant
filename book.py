@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 class Order:
     # Constructor
     def __init__(self, quantity, price, type, id_nb):
@@ -56,12 +59,17 @@ class Book:
 
     def __show_book(self):
         print("Book on {}".format(self.__name))
+        # Convert Book Orders To Dataframe
+        order_book = self.__convert_books_to_df()
+        print(order_book)
+        """
         # Show All Active SELL Orders
         for i in range(0, len(self.__sell_orders)):
             print("        {} {}@{} id={}".format(self.__sell_orders[i].get_type(), self.__sell_orders[i].get_qty(), self.__sell_orders[i].get_price(), self.__sell_orders[i].get_id()))
         # Show All Active BUY Orders
         for i in range(0, len(self.__buy_orders)):
             print("        {} {}@{} id={}".format(self.__buy_orders[i].get_type(), self.__buy_orders[i].get_qty(), self.__buy_orders[i].get_price(), self.__buy_orders[i].get_id()))
+        """
         print("------------------------")
 
     def __sort_orders(self, type):
@@ -93,3 +101,10 @@ class Book:
                     self.__buy_orders = self.__buy_orders[1:]
                 if self.__sell_orders[-1].get_qty() == 0:
                     self.__sell_orders = self.__sell_orders[0:-1]
+
+    def __convert_books_to_df(self):
+        df_sell_orders = pd.DataFrame([s.__dict__ for s in self.__sell_orders])
+        df_buy_orders = pd.DataFrame([b.__dict__ for b in self.__buy_orders])
+        df_order_book = df_sell_orders.append(df_buy_orders, ignore_index=True)
+        df_order_book.columns = ["qty", "price", "type", "id"]
+        return df_order_book
